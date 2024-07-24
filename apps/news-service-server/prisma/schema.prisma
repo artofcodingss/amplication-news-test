@@ -1,0 +1,47 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Admin {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  newsItems News[]
+  name      String?
+  email     String?
+}
+
+model News {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String?
+  title     String?
+  admin     Admin?   @relation(fields: [adminId], references: [id])
+  adminId   String?  @db.ObjectId
+  comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId String?  @db.ObjectId
+}
+
+model Comment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  newsItems News[]
+  text      String?
+  visitor   Visitor? @relation(fields: [visitorId], references: [id])
+  visitorId String?  @db.ObjectId
+}
+
+model Visitor {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  name      String?
+  comments  Comment[]
+}
