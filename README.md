@@ -1,0 +1,1 @@
+# amplication-news-test
